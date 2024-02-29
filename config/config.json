@@ -1,0 +1,27 @@
+{
+  "application_config": {
+    "secret": "",
+    "log_level": "1",
+    "is_debug": true
+  },
+  "database_config": {
+    "host": "localhost",
+    "port": "5432",
+    "username": "nghia",
+    "password": "1",
+    "database": "test",
+    "log_level": "4"
+  },
+  "redis_config": {
+    "host": "",
+    "port": "",
+    "secret": "",
+    "database_index": 0,
+    "default_expiration": 0
+  },
+  "directory_config": {
+    "base_asset_url": "",
+    "base_uploads_directory": "",
+    "images_directory": ""
+  }
+}

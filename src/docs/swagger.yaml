@@ -1,0 +1,68 @@
+basePath: /api
+definitions:
+  models.User:
+    properties:
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+      username:
+        type: string
+    required:
+    - first_name
+    - username
+    type: object
+host: localhost:9000
+info:
+  contact: {}
+  title: Swagger Boilerplate API
+  version: "1.0"
+paths:
+  /users:
+    get:
+      responses:
+        "200":
+          description: OK
+      summary: return list users
+      tags:
+      - users
+  /users/{user_id}:
+    get:
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      summary: return a user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      responses:
+        "200":
+          description: OK
+      summary: update a user
+      tags:
+      - users
+swagger: "2.0"
