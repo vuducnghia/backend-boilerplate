@@ -28,6 +28,14 @@ info:
   title: Swagger Boilerplate API
   version: "1.0"
 paths:
+  /application/heartbeat:
+    get:
+      responses:
+        "200":
+          description: OK
+      summary: return a user
+      tags:
+      - heartbeat
   /users:
     get:
       responses:

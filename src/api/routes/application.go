@@ -1,15 +1,13 @@
 package routes
 
 import (
+	"backend-boilerplate/src/api/handlers"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func addHeartbeat(r *gin.RouterGroup) {
 	app := r.Group("/application")
 	{
-		app.GET("/heartbeat", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{"status": "ok"})
-		})
+		app.GET("/heartbeat", handlers.Handler(handlers.GetHeartbeat))
 	}
 }

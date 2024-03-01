@@ -8,6 +8,19 @@
     "host": "localhost:9000",
     "basePath": "/api",
     "paths": {
+        "/application/heartbeat": {
+            "get": {
+                "tags": [
+                    "heartbeat"
+                ],
+                "summary": "return a user",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "tags": [
