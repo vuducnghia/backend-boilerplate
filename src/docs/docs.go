@@ -26,6 +26,38 @@ const docTemplate = `{
                         "description": "OK"
                     }
                 }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "create a user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "user",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
             }
         },
         "/users/{user_id}": {
@@ -80,6 +112,29 @@ const docTemplate = `{
                         "description": "OK"
                     }
                 }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "delete a user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
             }
         }
     },
@@ -88,9 +143,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "first_name",
+                "last_name",
+                "phone_number",
                 "username"
             ],
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
                 "first_name": {
                     "type": "string"
                 },
@@ -98,6 +158,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "last_name": {
+                    "type": "string"
+                },
+                "modified_at": {
                     "type": "string"
                 },
                 "phone_number": {

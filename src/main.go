@@ -25,7 +25,9 @@ func main() {
 	if err := application.InitializeApplication(); err != nil {
 		log.Fatal().Err(err).Msg("error initializing application")
 	}
-	models.SetDatabase(application.DB)
+	if err := models.SetDatabase(application.DB); err != nil {
+		log.Error().Err(err).Msg("error connecting to database")
+	}
 	setupDebug()
 
 	server := &http.Server{
@@ -55,6 +57,7 @@ func setupDebug() {
 	if application.GetConfig().ApplicationConfig.IsDebug {
 		log.Info().Msg("running in mode: debug (app)")
 		gin.SetMode(gin.DebugMode)
+		application.GetConfig().PostgresConfig.EnableDebug()
 	} else {
 		log.Info().Msg("running in mode: production (app)")
 		gin.SetMode(gin.ReleaseMode)

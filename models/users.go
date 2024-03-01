@@ -1,5 +1,12 @@
 package models
 
+import (
+	"context"
+)
+
+type UserPassword struct {
+	Password string `json:"password" binding:"required"`
+}
 type User struct {
 	BaseModelUUID
 	Username    string `json:"username" binding:"required"`
@@ -12,18 +19,31 @@ type User struct {
 }
 type Users []User
 
-func (u *User) Create() error {
-	return db.Create(u).Error
+func (u *User) Create(c context.Context) error {
+	if _, err := db.NewInsert().Model(u).Exec(c); err != nil {
+		return err
+	}
+	return nil
 }
 
-func (u *Users) GetAll() error {
-	return db.Find(u).Error
+func (u *Users) GetAll(c context.Context) error {
+	return db.NewSelect().Model(u).Scan(c)
 }
 
-func (u *User) GetById() error {
-	return db.Model(u).First(u).Error
+func (u *User) GetById(c context.Context) error {
+	return db.NewSelect().Model(u).Scan(c)
 }
 
-func (u *User) Update() error {
-	return db.Model(u).Updates(u).Error
+func (u *User) Update(c context.Context) error {
+	if _, err := db.NewUpdate().Model(u).WherePK().Exec(c); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *User) Delete(c context.Context) error {
+	if _, err := db.NewDelete().Model(u).WherePK().Exec(c); err != nil {
+		return err
+	}
+	return nil
 }

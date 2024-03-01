@@ -7,10 +7,10 @@
   "database_config": {
     "host": "localhost",
     "port": "5432",
-    "username": "nghia",
+    "username": "postgres",
     "password": "1",
     "database": "test",
-    "log_level": "4"
+    "is_debug": true
   },
   "redis_config": {
     "host": "",

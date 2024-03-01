@@ -37,7 +37,7 @@ type DatabaseConfig struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Database string `json:"database"`
-	LogLevel string `json:"log_level"`
+	IsDebug  bool   `json:"is_debug"`
 }
 
 type DirectoryConfig struct {

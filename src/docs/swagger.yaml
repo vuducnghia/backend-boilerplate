@@ -2,11 +2,15 @@ basePath: /api
 definitions:
   models.User:
     properties:
+      created_at:
+        type: string
       first_name:
         type: string
       id:
         type: string
       last_name:
+        type: string
+      modified_at:
         type: string
       phone_number:
         type: string
@@ -14,6 +18,8 @@ definitions:
         type: string
     required:
     - first_name
+    - last_name
+    - phone_number
     - username
     type: object
 host: localhost:9000
@@ -30,7 +36,43 @@ paths:
       summary: return list users
       tags:
       - users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      responses:
+        "200":
+          description: OK
+      summary: create a user
+      tags:
+      - users
   /users/{user_id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      summary: delete a user
+      tags:
+      - users
     get:
       parameters:
       - description: user_id

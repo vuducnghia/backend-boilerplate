@@ -1,21 +1,24 @@
 package models
 
 import (
+	"context"
 	"fmt"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
+	"github.com/uptrace/bun"
 )
 
+var _ bun.BeforeInsertHook = (*BaseModelUUID)(nil)
+
 type BaseModel struct {
-	Id uint `json:"id"` // field named `ID` will be used as a primary field by default
+	Id int32 `json:"id" bun:"pk"`
 }
 
 type BaseModelUUID struct {
-	Id string `json:"id" gorm:"primaryKey"`
+	Id string `json:"id" bun:"id,pk"`
 }
 
-func (m *BaseModelUUID) BeforeCreate(tx *gorm.DB) (err error) {
-	table := tx.Statement.Table
-	m.Id = fmt.Sprintf("%s_%s", table[:4], uuid.New().String())
+func (b *BaseModelUUID) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
+	id := fmt.Sprintf("'%s_%s'", query.GetTableName()[:4], uuid.New().String())
+	query.Value("id", id)
 	return nil
 }

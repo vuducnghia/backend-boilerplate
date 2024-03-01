@@ -7,10 +7,11 @@ import (
 
 func InitializeApplication() error {
 	if configuration.PostgresConfig != nil {
-		return ConnectDatabase(GetConfig().PostgresConfig)
+		ConnectDatabase(GetConfig().PostgresConfig)
 	} else {
 		return errors.New("the postgres database has no configuration")
 	}
+	return nil
 }
 
 func init() {

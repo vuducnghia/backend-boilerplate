@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	log "backend-boilerplate/logger"
 	"backend-boilerplate/models"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -27,7 +26,6 @@ func ErrorHandler(c *gin.Context) {
 			if name == "-" {
 				name = ""
 			}
-			log.Debug().Msgf("%s", name)
 			return name
 		})
 	}
