@@ -1,6 +1,7 @@
 {
   "application_config": {
     "secret": "",
+    "request_timeout": 10,
     "log_level": "1",
     "is_debug": true
   },

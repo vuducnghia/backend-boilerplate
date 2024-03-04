@@ -6,7 +6,6 @@ import (
 	"errors"
 	"flag"
 	"github.com/rs/zerolog"
-
 	"os"
 	"strings"
 )
@@ -26,9 +25,10 @@ type Configuration struct {
 }
 
 type SystemConfig struct {
-	Secret   string `json:"secret"`
-	LogLevel string `json:"log_level"`
-	IsDebug  bool   `json:"is_debug"`
+	Secret         string `json:"secret"`
+	RequestTimeout int    `json:"request_timeout"`
+	LogLevel       string `json:"log_level"`
+	IsDebug        bool   `json:"is_debug"`
 }
 
 type DatabaseConfig struct {

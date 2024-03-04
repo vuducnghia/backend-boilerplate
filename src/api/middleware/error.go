@@ -29,11 +29,12 @@ func ErrorHandler(c *gin.Context) {
 			return name
 		})
 	}
+
 	c.Next()
+
 	if len(c.Errors) < 1 || (c.IsAborted() && c.Writer.Written()) {
 		return
 	}
-
 	errorMsg := c.Errors.Last()
 	var errorInt models.ErrorInt
 	switch {

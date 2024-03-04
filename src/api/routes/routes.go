@@ -26,11 +26,16 @@ func SetupRouter() *gin.Engine {
 		AllowHeaders:    []string{"Accept", "Accept-Encoding", "Authorization", "Content-Type", "Content-Length", "Origin", "X-CSRF-Token"},
 	}))
 
+	router.Use(middleware.Timeout)
 	router.Use(middleware.ErrorHandler)
 
+	// setup router groups
 	NoAuthApi := router.Group("/api")
+	auth := router.Group("/auth")
+
 	addHeartbeat(NoAuthApi)
 	addUserRoutes(NoAuthApi)
+	addAuthRoutes(auth)
 
 	// use ginSwagger middleware to serve the API docs
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
