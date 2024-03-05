@@ -18,6 +18,9 @@ import (
 // @version         1.0
 // @host      		localhost:9000
 // @BasePath  		/api
+// @securityDefinitions.apikey  ApiKeyAuth
+// @in header
+// @name Token
 func main() {
 	if err := application.LoadConfig(); err != nil {
 		log.Fatal().Err(err)

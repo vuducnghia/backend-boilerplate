@@ -20,7 +20,61 @@ const docTemplate = `{
                 "tags": [
                     "heartbeat"
                 ],
-                "summary": "return a user",
+                "summary": "return a status",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "create a user",
+                "parameters": [
+                    {
+                        "description": "user",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UserCredentials"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "get new token",
+                "parameters": [
+                    {
+                        "description": "user",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.RefreshToken"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -49,13 +103,6 @@ const docTemplate = `{
                 ],
                 "summary": "create a user",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "user_id",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "description": "user",
                         "name": "user",
@@ -152,6 +199,34 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.Auth": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.RefreshToken": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "required": [
@@ -161,19 +236,18 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
+                "auth": {
+                    "description": "relations",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.Auth"
+                        }
+                    ]
                 },
                 "first_name": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "last_name": {
-                    "type": "string"
-                },
-                "modified_at": {
                     "type": "string"
                 },
                 "phone_number": {
@@ -183,6 +257,28 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "models.UserCredentials": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Token",
+            "in": "header"
         }
     }
 }`

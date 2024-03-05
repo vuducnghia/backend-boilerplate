@@ -4,6 +4,7 @@ import (
 	application "backend-boilerplate/config"
 	"backend-boilerplate/models"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -24,12 +25,14 @@ func Timeout(c *gin.Context) {
 	go func() {
 		select {
 		case <-ctx.Done():
-			processError(&models.InternalError{
-				Status:  http.StatusRequestTimeout,
-				Type:    "request_timeout",
-				Message: "request timeout",
-				Details: fmt.Sprintf("%s", c.Request.Context().Err()),
-			}, c)
+			if errors.Is(ctx.Err(), context.DeadlineExceeded) {
+				processError(&models.InternalError{
+					Status:  http.StatusRequestTimeout,
+					Type:    "request_timeout",
+					Message: "request timeout",
+					Details: fmt.Sprintf("%s", c.Request.Context().Err()),
+				}, c)
+			}
 		}
 	}()
 	c.Next()

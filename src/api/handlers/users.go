@@ -20,7 +20,7 @@ func GetUser(c *gin.Context) *gin.Error {
 	if u.Id == "" {
 		return BadParameterError(BadRequestParameter, "user_id", c)
 	}
-	if err := u.GetById(c); err != nil {
+	if err := u.GetById(c.Request.Context()); err != nil {
 		return DatabaseError(err, "the user could not be found", c)
 	}
 
@@ -35,8 +35,8 @@ func GetUser(c *gin.Context) *gin.Error {
 // @Router		/users [get]
 func GetUsers(c *gin.Context) *gin.Error {
 	u := &models.Users{}
-	err := u.GetAll(c)
-	if err != nil {
+
+	if err := u.GetAll(c.Request.Context()); err != nil {
 		return c.Error(DatabaseError(err, "could not retrieve user list", c))
 	}
 
@@ -59,13 +59,13 @@ func UpdateUser(c *gin.Context) *gin.Error {
 		return BadParameterError(BadRequestParameter, "user_id", c)
 	}
 
-	if err := u.GetById(c); err != nil {
+	if err := u.GetById(c.Request.Context()); err != nil {
 		return EntityNotFoundError(err, "user", c)
 	}
 	if err := c.ShouldBindJSON(u); err != nil {
 		return ValidatorError(err, "error validating user entity", c)
 	}
-	if err := u.Update(c); err != nil {
+	if err := u.Update(c.Request.Context()); err != nil {
 		return DatabaseError(err, "", c)
 	}
 	c.JSON(http.StatusOK, u)
@@ -76,7 +76,6 @@ func UpdateUser(c *gin.Context) *gin.Error {
 // @Summary		create a user
 // @Tags		users
 // @Accept		json
-// @Param		user_id path string true "user_id"
 // @Param		user body models.User true "user"
 // @Success 	200
 // @Router		/users [post]
@@ -94,7 +93,7 @@ func CreateUser(c *gin.Context) *gin.Error {
 	} else {
 		u.Password = string(hash)
 	}
-	if err := u.Create(c); err != nil {
+	if err := u.Create(c.Request.Context()); err != nil {
 		return DatabaseError(err, "", c)
 	}
 	c.JSON(http.StatusOK, u)
@@ -115,7 +114,7 @@ func DeleteUser(c *gin.Context) *gin.Error {
 		return BadParameterError(BadRequestParameter, "user_id", c)
 	}
 
-	if err := u.Delete(c); err != nil {
+	if err := u.Delete(c.Request.Context()); err != nil {
 		return DatabaseError(err, "", c)
 	}
 

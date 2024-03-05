@@ -10,8 +10,8 @@ import (
 var _ bun.BeforeAppendModelHook = (*BaseModelAudit)(nil)
 
 type BaseModelAudit struct {
-	CreatedAt  time.Time `json:"created_at" bun:",nullzero,notnull,default:current_timestamp"`
-	ModifiedAt time.Time `json:"modified_at" bun:",nullzero,notnull,default:current_timestamp"`
+	CreatedAt  time.Time `json:"created_at" bun:",nullzero,notnull,default:current_timestamp" swaggerignore:"true"`
+	ModifiedAt time.Time `json:"modified_at" bun:",nullzero,notnull,default:current_timestamp" swaggerignore:"true"`
 }
 
 func (b *BaseModelAudit) BeforeAppendModel(ctx context.Context, query schema.Query) error {

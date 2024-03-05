@@ -14,7 +14,7 @@ type BaseModel struct {
 }
 
 type BaseModelUUID struct {
-	Id string `json:"id" bun:"id,pk"`
+	Id string `json:"id" bun:"id,pk" swaggerignore:"true"`
 }
 
 func (b *BaseModelUUID) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {

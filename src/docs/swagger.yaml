@@ -1,16 +1,32 @@
 basePath: /api
 definitions:
+  models.Auth:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user_id:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  models.RefreshToken:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
   models.User:
     properties:
-      created_at:
-        type: string
+      auth:
+        allOf:
+        - $ref: '#/definitions/models.Auth'
+        description: relations
       first_name:
         type: string
-      id:
-        type: string
       last_name:
-        type: string
-      modified_at:
         type: string
       phone_number:
         type: string
@@ -20,6 +36,16 @@ definitions:
     - first_name
     - last_name
     - phone_number
+    - username
+    type: object
+  models.UserCredentials:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
     - username
     type: object
 host: localhost:9000
@@ -33,9 +59,43 @@ paths:
       responses:
         "200":
           description: OK
-      summary: return a user
+      summary: return a status
       tags:
       - heartbeat
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserCredentials'
+      responses:
+        "200":
+          description: OK
+      summary: create a user
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.RefreshToken'
+      responses:
+        "200":
+          description: OK
+      summary: get new token
+      tags:
+      - auth
   /users:
     get:
       responses:
@@ -48,11 +108,6 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: user_id
-        in: path
-        name: user_id
-        required: true
-        type: string
       - description: user
         in: body
         name: user
@@ -115,4 +170,9 @@ paths:
       summary: update a user
       tags:
       - users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Token
+    type: apiKey
 swagger: "2.0"
