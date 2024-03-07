@@ -25,7 +25,8 @@ type Configuration struct {
 }
 
 type SystemConfig struct {
-	Secret         string `json:"secret"`
+	AccessToken    string `json:"access_token"`
+	RefreshToken   string `json:"refresh_token"`
 	RequestTimeout int    `json:"request_timeout"`
 	LogLevel       string `json:"log_level"`
 	IsDebug        bool   `json:"is_debug"`
@@ -49,8 +50,9 @@ type DirectoryConfig struct {
 func setDefaultConfig() *Configuration {
 	return &Configuration{
 		ApplicationConfig: &SystemConfig{
-			LogLevel: "info",
-			Secret:   "CHANGEMENOW",
+			LogLevel:     "info",
+			AccessToken:  "CHANGEMENOW",
+			RefreshToken: "CHANGEMENOW",
 		},
 		DirectoryConfig: &DirectoryConfig{
 			BaseAssetUrl:         "localhost",

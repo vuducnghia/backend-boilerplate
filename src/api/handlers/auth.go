@@ -113,7 +113,7 @@ func generateRefreshToken(u *models.User, life time.Duration) (string, error) {
 		"user_id": u.Id,
 		"exp":     time.Now().Add(life * 30).Unix(),
 	})
-	return refreshToken.SignedString([]byte(application.GetConfig().ApplicationConfig.Secret))
+	return refreshToken.SignedString([]byte(application.GetConfig().ApplicationConfig.RefreshToken))
 }
 
 func generateAccessToken(u *models.User, life time.Duration) (string, error) {
@@ -121,7 +121,7 @@ func generateAccessToken(u *models.User, life time.Duration) (string, error) {
 		"user_id": u.Id,
 		"exp":     time.Now().Add(life).Unix(),
 	})
-	return accessToken.SignedString([]byte(application.GetConfig().ApplicationConfig.Secret))
+	return accessToken.SignedString([]byte(application.GetConfig().ApplicationConfig.AccessToken))
 }
 
 func validateRefreshToken(t string) (*jwt.Token, error) {
@@ -129,6 +129,6 @@ func validateRefreshToken(t string) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected token signing method")
 		}
-		return []byte(application.GetConfig().ApplicationConfig.Secret), nil
+		return []byte(application.GetConfig().ApplicationConfig.RefreshToken), nil
 	})
 }

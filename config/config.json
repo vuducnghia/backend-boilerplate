@@ -1,6 +1,7 @@
 {
   "application_config": {
-    "secret": "",
+    "access_token": "",
+    "refresh_token": "",
     "request_timeout": 300,
     "log_level": "1",
     "is_debug": true

@@ -31,12 +31,17 @@ func SetupRouter() *gin.Engine {
 
 	// setup router groups
 	NoAuthApi := router.Group("/api")
+	AuthApi := router.Group("/api")
+	AuthApi.Use(middleware.AuthorizationHandler)
 
 	addHeartbeat(NoAuthApi)
 	addAuthRoutes(NoAuthApi)
-	addUserRoutes(NoAuthApi)
+	addUserRoutes(AuthApi)
 
 	// use ginSwagger middleware to serve the API docs
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(
+		swaggerFiles.Handler,
+		ginSwagger.PersistAuthorization(true)),
+	)
 	return router
 }

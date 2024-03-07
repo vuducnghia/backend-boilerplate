@@ -23,7 +23,7 @@ type User struct {
 	BaseModelSoftDelete
 
 	//	relations
-	Auth *Auth `bun:"rel:has-one,join:id=user_id"`
+	Auth *Auth `json:"auth" bun:"rel:has-one,join:id=user_id" swaggerignore:"true"`
 }
 type Users []User
 

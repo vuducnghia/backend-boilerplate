@@ -8,12 +8,13 @@ import (
 	"net/http"
 )
 
-// GetUser	godoc
-// @Summary	return a user
-// @Tags	users
-// @Param	user_id path string true "user_id"
-// @Success	200
-// @Router	/users/{user_id} [get]
+// GetUser		godoc
+// @Summary		return a user
+// @Tags		users
+// @Param		user_id path string true "user_id"
+// @Success		200
+// @Router		/users/{user_id} [get]
+// @Security 	Bearer
 func GetUser(c *gin.Context) *gin.Error {
 	u := &models.User{}
 	u.Id = GetUUIDFromPath("user_id", c)
@@ -33,6 +34,7 @@ func GetUser(c *gin.Context) *gin.Error {
 // @Tags 		users
 // @Success 	200
 // @Router		/users [get]
+// @Security 	Bearer
 func GetUsers(c *gin.Context) *gin.Error {
 	u := &models.Users{}
 
@@ -52,6 +54,7 @@ func GetUsers(c *gin.Context) *gin.Error {
 // @Param		user body models.User true "user"
 // @Success 	200
 // @Router		/users/{user_id} [put]
+// @Security 	Bearer
 func UpdateUser(c *gin.Context) *gin.Error {
 	u := &models.User{}
 	u.Id = c.Param("user_id")
@@ -74,11 +77,11 @@ func UpdateUser(c *gin.Context) *gin.Error {
 
 // CreateUser 	godoc
 // @Summary		create a user
-// @Tags		users
+// @Tags		auth
 // @Accept		json
 // @Param		user body models.User true "user"
 // @Success 	200
-// @Router		/users [post]
+// @Router		/auth/register [post]
 func CreateUser(c *gin.Context) *gin.Error {
 	u := &models.User{}
 	p := &models.UserPassword{}
@@ -107,6 +110,7 @@ func CreateUser(c *gin.Context) *gin.Error {
 // @Param		user_id path string true "user_id"
 // @Success 	200
 // @Router		/users/{user_id} [delete]
+// @Security 	Bearer
 func DeleteUser(c *gin.Context) *gin.Error {
 	u := &models.User{}
 	u.Id = c.Param("user_id")

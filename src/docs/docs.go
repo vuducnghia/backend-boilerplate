@@ -82,24 +82,13 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
-            "get": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "return list users",
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            },
+        "/auth/register": {
             "post": {
                 "consumes": [
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "auth"
                 ],
                 "summary": "create a user",
                 "parameters": [
@@ -120,8 +109,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/users": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "return list users",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/users/{user_id}": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -142,6 +154,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -174,6 +191,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -199,23 +221,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Auth": {
-            "type": "object",
-            "required": [
-                "refresh_token"
-            ],
-            "properties": {
-                "access_token": {
-                    "type": "string"
-                },
-                "refresh_token": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "string"
-                }
-            }
-        },
         "models.RefreshToken": {
             "type": "object",
             "required": [
@@ -236,14 +241,6 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
-                "auth": {
-                    "description": "relations",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/models.Auth"
-                        }
-                    ]
-                },
                 "first_name": {
                     "type": "string"
                 },
@@ -275,9 +272,9 @@ const docTemplate = `{
         }
     },
     "securityDefinitions": {
-        "ApiKeyAuth": {
+        "Bearer": {
             "type": "apiKey",
-            "name": "Token",
+            "name": "Authorization",
             "in": "header"
         }
     }
