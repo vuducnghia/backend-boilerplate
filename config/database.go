@@ -27,8 +27,7 @@ func ConnectDatabase(config *DatabaseConfig) {
 	)
 
 	sqldb := sql.OpenDB(pgconn)
-	db := bun.NewDB(sqldb, pgdialect.New())
-	DB = db
+	DB = bun.NewDB(sqldb, pgdialect.New())
 }
 
 func (c *DatabaseConfig) EnableDebug() {
