@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -38,7 +37,7 @@ func (u *User) Create(c *gin.Context) error {
 func (u *Users) GetAll(c *gin.Context) (int, error) {
 	q := db.NewSelect().Model(u)
 	if c.Value("search_query") != "" {
-		q.Where(fmt.Sprintf("username ILIKE '%s'", c.Value("search_query")))
+		q.Where("username ILIKE ?", c.Value("search_query"))
 	}
 	return ApplyPagination(q, c).ScanAndCount(c.Request.Context())
 }
