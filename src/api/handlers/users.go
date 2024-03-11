@@ -21,7 +21,7 @@ func GetUser(c *gin.Context) *gin.Error {
 	if u.Id == "" {
 		return BadParameterError(BadRequestParameter, "user_id", c)
 	}
-	if err := u.GetById(c.Request.Context()); err != nil {
+	if err := u.GetById(c); err != nil {
 		return DatabaseError(err, "the user could not be found", c)
 	}
 
@@ -32,17 +32,22 @@ func GetUser(c *gin.Context) *gin.Error {
 // GetUsers 	godoc
 // @Summary 	return list users
 // @Tags 		users
+// @Param       limit    		query     string  false  "limit"
+// @Param       page_number    	query     string  false  "page_number"
+// @Param       search_query    query     string  false  "search_query"
 // @Success 	200
 // @Router		/users [get]
 // @Security 	Bearer
 func GetUsers(c *gin.Context) *gin.Error {
 	u := &models.Users{}
-
-	if err := u.GetAll(c.Request.Context()); err != nil {
+	w := GetPaginationVariables(c)
+	if count, err := u.GetAll(c); err != nil {
 		return c.Error(DatabaseError(err, "could not retrieve user list", c))
+	} else {
+		w = models.NewPaginationWrapper(u, count, c)
 	}
 
-	c.JSON(http.StatusOK, u)
+	c.JSON(http.StatusOK, w)
 	return nil
 }
 
@@ -62,13 +67,13 @@ func UpdateUser(c *gin.Context) *gin.Error {
 		return BadParameterError(BadRequestParameter, "user_id", c)
 	}
 
-	if err := u.GetById(c.Request.Context()); err != nil {
+	if err := u.GetById(c); err != nil {
 		return EntityNotFoundError(err, "user", c)
 	}
 	if err := c.ShouldBindJSON(u); err != nil {
 		return ValidatorError(err, "error validating user entity", c)
 	}
-	if err := u.Update(c.Request.Context()); err != nil {
+	if err := u.Update(c); err != nil {
 		return DatabaseError(err, "", c)
 	}
 	c.JSON(http.StatusOK, u)
@@ -96,7 +101,7 @@ func CreateUser(c *gin.Context) *gin.Error {
 	} else {
 		u.Password = string(hash)
 	}
-	if err := u.Create(c.Request.Context()); err != nil {
+	if err := u.Create(c); err != nil {
 		return DatabaseError(err, "", c)
 	}
 	c.JSON(http.StatusOK, u)
@@ -118,7 +123,7 @@ func DeleteUser(c *gin.Context) *gin.Error {
 		return BadParameterError(BadRequestParameter, "user_id", c)
 	}
 
-	if err := u.Delete(c.Request.Context()); err != nil {
+	if err := u.Delete(c); err != nil {
 		return DatabaseError(err, "", c)
 	}
 

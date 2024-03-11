@@ -25,7 +25,7 @@ func Login(c *gin.Context) *gin.Error {
 		return BadRequestError(err, "", c)
 	}
 	u.Username = credentials.Username
-	if err := u.GetByUsername(c.Request.Context()); err != nil {
+	if err := u.GetByUsername(c); err != nil {
 		return InternalError(err, "invalid username or password", c)
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(credentials.Password)); err != nil {
@@ -79,7 +79,7 @@ func RefreshToken(c *gin.Context) *gin.Error {
 
 	u := &models.User{}
 	u.Id = claims.UserId
-	if err := u.GetById(c.Request.Context()); err != nil {
+	if err := u.GetById(c); err != nil {
 		return InternalError(err, "invalid username or password", c)
 
 	}

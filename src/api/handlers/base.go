@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"backend-boilerplate/models"
+	"context"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -81,4 +82,12 @@ func GetIDFromPath(k string, c *gin.Context) int32 {
 
 func GetUUIDFromPath(k string, c *gin.Context) string {
 	return c.Param(k)
+}
+
+func GetPaginationVariables(c *gin.Context) *models.PaginationWrapper {
+	var pw *models.PaginationWrapper
+	context.WithValue(c, "page_number", c.GetInt("page_number"))
+	context.WithValue(c, "limit", c.GetInt("limit"))
+	context.WithValue(c, "search_query", c.GetInt("search_query"))
+	return pw
 }

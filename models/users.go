@@ -1,7 +1,8 @@
 package models
 
 import (
-	"context"
+	"fmt"
+	"github.com/gin-gonic/gin"
 	"strings"
 )
 
@@ -27,39 +28,40 @@ type User struct {
 }
 type Users []User
 
-func (u *User) Create(c context.Context) error {
+func (u *User) Create(c *gin.Context) error {
 	if _, err := db.NewInsert().Model(u).Exec(c); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (u *Users) GetAll(c context.Context) error {
-	if err := db.NewSelect().Model(u).Scan(c); err != nil {
-		return err
+func (u *Users) GetAll(c *gin.Context) (int, error) {
+	q := db.NewSelect().Model(u)
+	if c.Value("search_query") != "" {
+		q.Where(fmt.Sprintf("username ILIKE '%s'", c.Value("search_query")))
 	}
-	return nil
+	return ApplyPagination(q, c).ScanAndCount(c.Request.Context())
 }
 
-func (u *User) GetById(c context.Context) error {
+func (u *User) GetById(c *gin.Context) error {
 	return db.NewSelect().Model(u).Scan(c)
 }
 
-func (u *User) Update(c context.Context) error {
+func (u *User) Update(c *gin.Context) error {
 	if _, err := db.NewUpdate().Model(u).WherePK().Exec(c); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (u *User) Delete(c context.Context) error {
+func (u *User) Delete(c *gin.Context) error {
 	if _, err := db.NewDelete().Model(u).WherePK().Exec(c); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (u *User) GetByUsername(c context.Context) error {
+func (u *User) GetByUsername(c *gin.Context) error {
 	return db.NewSelect().
 		Model(u).
 		Relation("Auth").

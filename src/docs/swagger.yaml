@@ -100,6 +100,19 @@ paths:
       - auth
   /users:
     get:
+      parameters:
+      - description: limit
+        in: query
+        name: limit
+        type: string
+      - description: page_number
+        in: query
+        name: page_number
+        type: string
+      - description: search_query
+        in: query
+        name: search_query
+        type: string
       responses:
         "200":
           description: OK

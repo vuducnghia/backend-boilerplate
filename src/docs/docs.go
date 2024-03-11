@@ -120,6 +120,26 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "return list users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page_number",
+                        "name": "page_number",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search_query",
+                        "name": "search_query",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
