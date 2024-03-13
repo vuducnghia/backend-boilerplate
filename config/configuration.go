@@ -92,7 +92,7 @@ func LoadConfig() error {
 			return ConfigFileFormatError
 		}
 	}
-
+	loadEnvironment(configuration)
 	lvl, err := zerolog.ParseLevel(configuration.ApplicationConfig.LogLevel)
 
 	if err != nil {
@@ -102,4 +102,37 @@ func LoadConfig() error {
 	}
 	log.SetGlobalLogLevel(lvl.String())
 	return nil
+}
+
+func checkEnvironment(key string, original string) string {
+	if val, ok := os.LookupEnv(key); !ok {
+		return original
+	} else {
+		return val
+	}
+}
+
+func loadEnvironment(c *Configuration) {
+	if c.ApplicationConfig == nil {
+		c.ApplicationConfig = &SystemConfig{}
+	}
+	c.ApplicationConfig.AccessToken = checkEnvironment("application_config__access_token", c.ApplicationConfig.AccessToken)
+	c.ApplicationConfig.RefreshToken = checkEnvironment("application_config__refresh_token", c.ApplicationConfig.RefreshToken)
+	c.ApplicationConfig.LogLevel = checkEnvironment("application_config__log_level", c.ApplicationConfig.LogLevel)
+
+	if c.PostgresConfig == nil {
+		c.PostgresConfig = &DatabaseConfig{}
+	}
+	c.PostgresConfig.Port = checkEnvironment("database_config__port", c.PostgresConfig.Port)
+	c.PostgresConfig.Host = checkEnvironment("database_config__host", c.PostgresConfig.Host)
+	c.PostgresConfig.Username = checkEnvironment("database_config__username", c.PostgresConfig.Username)
+	c.PostgresConfig.Password = checkEnvironment("database_config__password", c.PostgresConfig.Password)
+	c.PostgresConfig.Database = checkEnvironment("database_config__database", c.PostgresConfig.Database)
+
+	if c.DirectoryConfig == nil {
+		c.DirectoryConfig = &DirectoryConfig{}
+	}
+	c.DirectoryConfig.BaseAssetUrl = checkEnvironment("directory_config__base_asset_url", c.DirectoryConfig.BaseAssetUrl)
+	c.DirectoryConfig.BaseUploadsDirectory = checkEnvironment("directory_config__base_uploads_directory", c.DirectoryConfig.BaseUploadsDirectory)
+	c.DirectoryConfig.ImagesDirectory = checkEnvironment("directory_config__images_directory", c.DirectoryConfig.ImagesDirectory)
 }
