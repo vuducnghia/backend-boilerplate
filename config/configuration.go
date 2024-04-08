@@ -21,6 +21,7 @@ var (
 type Configuration struct {
 	ApplicationConfig *SystemConfig    `json:"application_config"`
 	PostgresConfig    *DatabaseConfig  `json:"database_config"`
+	RedisConfig       *RedisConfig     `json:"redis_config"`
 	DirectoryConfig   *DirectoryConfig `json:"directory_config"`
 }
 
