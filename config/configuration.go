@@ -7,6 +7,7 @@ import (
 	"flag"
 	"github.com/rs/zerolog"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -95,7 +96,6 @@ func LoadConfig() error {
 	}
 	loadEnvironment(configuration)
 	lvl, err := zerolog.ParseLevel(configuration.ApplicationConfig.LogLevel)
-
 	if err != nil {
 		configuration.ApplicationConfig.LogLevel = "info"
 		lvl = zerolog.InfoLevel
@@ -120,6 +120,11 @@ func loadEnvironment(c *Configuration) {
 	c.ApplicationConfig.AccessToken = checkEnvironment("application_config__access_token", c.ApplicationConfig.AccessToken)
 	c.ApplicationConfig.RefreshToken = checkEnvironment("application_config__refresh_token", c.ApplicationConfig.RefreshToken)
 	c.ApplicationConfig.LogLevel = checkEnvironment("application_config__log_level", c.ApplicationConfig.LogLevel)
+	if val, ok := os.LookupEnv("application_config__is_debug"); ok {
+		if bVal, pErr := strconv.ParseBool(val); pErr == nil {
+			c.ApplicationConfig.IsDebug = bVal
+		}
+	}
 
 	if c.PostgresConfig == nil {
 		c.PostgresConfig = &DatabaseConfig{}
@@ -129,6 +134,11 @@ func loadEnvironment(c *Configuration) {
 	c.PostgresConfig.Username = checkEnvironment("database_config__username", c.PostgresConfig.Username)
 	c.PostgresConfig.Password = checkEnvironment("database_config__password", c.PostgresConfig.Password)
 	c.PostgresConfig.Database = checkEnvironment("database_config__database", c.PostgresConfig.Database)
+	if val, ok := os.LookupEnv("database_config__is_debug"); ok {
+		if bVal, pErr := strconv.ParseBool(val); pErr == nil {
+			c.PostgresConfig.IsDebug = bVal
+		}
+	}
 
 	if c.DirectoryConfig == nil {
 		c.DirectoryConfig = &DirectoryConfig{}
