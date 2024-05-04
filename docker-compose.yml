@@ -1,0 +1,71 @@
+services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - path: go.mod
+          action: rebuild
+    restart: unless-stopped
+    environment:
+      database_config__host: ${POSTGRES_HOST}
+      database_config__port: ${POSTGRES_PORT}
+      database_config__username: ${POSTGRES_USER}
+      database_config__password: ${POSTGRES_PASSWORD}
+      database_config__database: ${POSTGRES_DB}
+      database_config__is_debug: ${POSTGRES_DEBUG}
+      application_config__is_debug: ${APPLICATION_DEBUG}
+    ports:
+      - 9000:9000
+    healthcheck:
+      test: curl http://localhost:9000/api/application/heartbeat
+      interval: 300s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - postgres-network
+      - redis-network
+
+
+
+  postgres:
+    image: postgres:alpine3.19
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      interval: 300s
+      timeout: 10s
+      retries: 5
+    networks:
+      - postgres-network
+
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    healthcheck:
+      test: redis-cli ping
+      interval: 300s
+      timeout: 10s
+      retries: 3
+    networks:
+      - redis-network
+
+networks:
+  postgres-network:
+    name: postgres-network
+    driver: bridge
+  redis-network:
+    name: redis-network
+    driver: bridge

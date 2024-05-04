@@ -1,7 +1,6 @@
 package application
 
 import (
-	"crypto/tls"
 	"database/sql"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -16,7 +15,7 @@ func ConnectDatabase(config *DatabaseConfig) {
 	pgconn := pgdriver.NewConnector(
 		pgdriver.WithNetwork("tcp"),
 		pgdriver.WithAddr(config.Host+":"+config.Port),
-		pgdriver.WithTLSConfig(&tls.Config{InsecureSkipVerify: true}),
+		pgdriver.WithTLSConfig(nil), // disable sslmode
 		pgdriver.WithUser(config.Username),
 		pgdriver.WithPassword(config.Password),
 		pgdriver.WithDatabase(config.Database),

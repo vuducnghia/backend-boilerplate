@@ -52,9 +52,10 @@ type DirectoryConfig struct {
 func setDefaultConfig() *Configuration {
 	return &Configuration{
 		ApplicationConfig: &SystemConfig{
-			LogLevel:     "info",
-			AccessToken:  "CHANGEMENOW",
-			RefreshToken: "CHANGEMENOW",
+			LogLevel:       "info",
+			AccessToken:    "CHANGEMENOW",
+			RefreshToken:   "CHANGEMENOW",
+			RequestTimeout: 300,
 		},
 		DirectoryConfig: &DirectoryConfig{
 			BaseAssetUrl:         "localhost",
